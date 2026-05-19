@@ -1,69 +1,287 @@
---[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
--- ========================================
--- SERVICES & INITIALIZATION
--- ========================================
+-- Script de prueba para KING-LIBRARY-UI (versión actualizada)
+-- Carga la librería
+local KingLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/PAPIKING-CODER/VKN/refs/heads/main/KING-LIBRARY-UI.lua"))()
 
-local Services = {
-    Players = game:GetService("Players"),
-    TweenService = game:GetService("TweenService"),
-    UserInputService = game:GetService("UserInputService"),
-    RunService = game:GetService("RunService")
-}
+-- Crear ventana principal
+local Window = KingLibrary:AddWindow("KING LIBRARY UI - Demo", {
+    main_color = Color3.fromRGB(41, 74, 122),
+    min_size = Vector2.new(500, 400),
+    toggle_key = Enum.KeyCode.RightShift,
+    can_resize = true
+})
 
-local Player = Services.Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+-- Variables de prueba
+local switchState = false
+local sliderValue = 50
+local selectedOption = "Opción 1"
+local currentKeybind = Enum.KeyCode.R
+local currentColor = Color3.fromRGB(255, 100, 100)
+local dropdownValue = ""
 
--- ========================================
--- CONFIGURATION
--- ========================================
+-- Función para mostrar notificaciones en consola
+local function notify(msg)
+    print("[KING-UI] " .. msg)
+    warn("[KING-UI] " .. msg)
+end
 
-local Config = {
-    MaxKeyLength = 50,
-    AnimationSpeed = 0.4,
-    ParticleCount = 60,
-    ParticleSpeed = 60
-}
+-- ========== TAB 1: COMPONENTES BÁSICOS ==========
+local BasicTab = Window:AddTab("📌 Básicos")
 
--- ========================================
--- COLOR SCHEME
--- ========================================
+-- Label informativo
+BasicTab:AddLabel("📋 COMPONENTES BÁSICOS")
 
-local Colors = {
-    Background = Color3.fromRGB(18, 18, 22),
-    Surface = Color3.fromRGB(25, 25, 30),
-    Primary = Color3.fromRGB(45, 45, 50),
-    Secondary = Color3.fromRGB(35, 35, 40),
-    Border = Color3.fromRGB(40, 40, 45),
-    TextPrimary = Color3.fromRGB(220, 220, 225),
-    TextSecondary = Color3.fromRGB(140, 140, 150),
-    Success = Color3.fromRGB(25, 135, 84),
-    Error = Color3.fromRGB(180, 50, 50),
-    Warning = Color3.fromRGB(200, 120, 30),
-    Discord = Color3.fromRGB(60, 70, 180),
-    GetKey = Color3.fromRGB(40, 140, 100),
-    HoverPrimary = Color3.fromRGB(55, 55, 60),
-    HoverDiscord = Color3.fromRGB(50, 60, 160),
-    HoverGetKey = Color3.fromRGB(30, 120, 80),
-    NeonWhite = Color3.fromRGB(255, 255, 255),
-    NeonGlow = Color3.fromRGB(240, 248, 255)
-}
+-- Botón simple
+BasicTab:AddButton("🔘 Botón de prueba", function()
+    notify("¡Botón presionado correctamente!")
+    print("✅ La librería funciona perfectamente")
+end)
 
--- ========================================
--- STATE MANAGEMENT
--- ========================================
+-- Botón con acción adicional
+BasicTab:AddButton("🎯 Obtener hora local", function()
+    local timeString = os.date("%H:%M:%S")
+    notify("🕐 Hora actual: " .. timeString)
+end)
 
-local State = {
-    IsLoading = false,
-    Particles = {},
-    Animations = {},
-    IsDestroyed = false,
-    MousePosition = {X = 0, Y = 0},
-    FocusStates = {
-        InputFocused = false,
-        ButtonHovered = {},
-        AnimationsActive = true
+-- Switch (toggle)
+local switch, switchObject = BasicTab:AddSwitch("⚙️ Activar función especial", function(state)
+    switchState = state
+    if state then
+        notify("✨ Función especial ACTIVADA")
+    else
+        notify("❌ Función especial DESACTIVADA")
+    end
+end)
+
+-- Slider
+local slider = BasicTab:AddSlider("🎚️ Ajustar volumen", function(value)
+    sliderValue = value
+    print("[SLIDER] Volumen: " .. value .. "%")
+    if value == 100 then
+        notify("🔊 Volumen máximo")
+    elseif value == 0 then
+        notify("🔇 Volumen mínimo")
+    end
+end, {min = 0, max = 100})
+
+-- Establecer valor inicial del slider
+slider:Set(50)
+
+-- TextBox
+local textBox = BasicTab:AddTextBox("✏️ Escribe tu nombre aquí", function(text)
+    if text ~= "" then
+        notify("👤 Hola, " .. text .. "!")
+        print("[TEXTBOX] Usuario ingresó: " .. text)
+    end
+end, {clear = true})
+
+-- Keybind
+local keybind = BasicTab:AddKeybind("⌨️ Tecla de activación", function(key)
+    notify("⌨️ Tecla presionada: " .. tostring(key))
+    print("[KEYBIND] " .. tostring(key))
+end, {standard = Enum.KeyCode.R})
+
+-- ========== TAB 2: COMPONENTES AVANZADOS ==========
+local AdvancedTab = Window:AddTab("🎮 Avanzados")
+
+AdvancedTab:AddLabel("🎯 COMPONENTES AVANZADOS")
+
+-- Dropdown
+local dropdown = AdvancedTab:AddDropdown("📋 Selecciona un color", function(option)
+    dropdownValue = option
+    notify("✅ Seleccionaste: " .. option)
+    print("[DROPDOWN] Opción elegida: " .. option)
+end)
+
+-- Añadir opciones al dropdown
+dropdown:Add("🔴 Rojo")
+dropdown:Add("🟢 Verde")
+dropdown:Add("🔵 Azul")
+dropdown:Add("🟡 Amarillo")
+dropdown:Add("🟣 Morado")
+dropdown:Add("⚫ Negro")
+
+-- Color Picker
+local colorPicker = AdvancedTab:AddColorPicker(function(color)
+    currentColor = color
+    local r = math.floor(color.R * 255)
+    local g = math.floor(color.G * 255)
+    local b = math.floor(color.B * 255)
+    print("[COLOR] RGB: " .. r .. ", " .. g .. ", " .. b)
+    notify("🎨 Color seleccionado: RGB(" .. r .. "," .. g .. "," .. b .. ")")
+end)
+
+-- ========== TAB 3: UTILIDADES ==========
+local UtilsTab = Window:AddTab("🛠️ Utilidades")
+
+UtilsTab:AddLabel("⚡ FUNCIONES ÚTILES")
+
+-- Botón de estado actual
+UtilsTab:AddButton("📊 Mostrar estado actual", function()
+    local status = string.format([[
+╔══════════════════════════════════╗
+║         ESTADO ACTUAL            ║
+╠══════════════════════════════════╣
+║ Switch: %s
+║ Slider: %d%%
+║ Dropdown: %s
+║ Keybind: %s
+╚══════════════════════════════════╝
+    ]],
+        switchState and "✅ Activado" or "❌ Desactivado",
+        sliderValue,
+        dropdownValue ~= "" and dropdownValue or "Ninguna",
+        tostring(currentKeybind)
+    )
+    print(status)
+    notify("Estado actual - Revisa la consola (F9)")
+end)
+
+-- Botón de reset
+UtilsTab:AddButton("🔄 Resetear todos los valores", function()
+    switch:Set(false)
+    slider:Set(50)
+    colorPicker:Set(Color3.fromRGB(255, 100, 100))
+    notify("🔄 Todos los valores han sido reiniciados")
+    print("[RESET] Configuración restaurada")
+end)
+
+-- Botón de información
+UtilsTab:AddButton("ℹ️ Información de la librería", function()
+    local info = [[
+╔══════════════════════════════════╗
+║     KING LIBRARY UI - INFO       ║
+╠══════════════════════════════════╣
+║ Versión: Actualizada            ║
+║ Assets: Nuevos (rbxassetid)     ║
+║ Hecho por: PAPIKING-CODER       ║
+║ Toggle: Right Shift             ║
+╚══════════════════════════════════╝
+    ]]
+    print(info)
+    notify("Información mostrada en consola")
+end)
+
+-- ========== TAB 4: EJEMPLOS PRÁCTICOS ==========
+local ExamplesTab = Window:AddTab("💻 Ejemplos")
+
+ExamplesTab:AddLabel("📜 EJEMPLOS PRÁCTICOS")
+
+-- Script de ejemplo: Velocidad
+ExamplesTab:AddButton("🏃‍♂️ Aumentar velocidad (3s)", function()
+    local player = game.Players.LocalPlayer
+    if player and player.Character then
+        local humanoid = player.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            local originalSpeed = humanoid.WalkSpeed
+            humanoid.WalkSpeed = 80
+            notify("⚡ Velocidad aumentada a 80")
+            task.wait(3)
+            humanoid.WalkSpeed = originalSpeed
+            notify("🐢 Velocidad restaurada a " .. originalSpeed)
+        else
+            notify("❌ Humanoid no encontrado")
+        end
+    else
+        notify("❌ Personaje no encontrado")
+    end
+end)
+
+-- Script de ejemplo: Salto
+ExamplesTab:AddButton("🦘 Super salto (3s)", function()
+    local player = game.Players.LocalPlayer
+    if player and player.Character then
+        local humanoid = player.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            local originalJump = humanoid.JumpPower
+            humanoid.JumpPower = 120
+            notify("💪 JumpPower aumentado a 120")
+            task.wait(3)
+            humanoid.JumpPower = originalJump
+            notify("✅ JumpPower restaurado a " .. originalJump)
+        end
+    end
+end)
+
+-- Script de ejemplo: Efecto visual
+ExamplesTab:AddButton("✨ Cambiar color del personaje", function()
+    local player = game.Players.LocalPlayer
+    if player and player.Character then
+        local character = player.Character
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                part.Color = Color3.fromHSV(math.random(), 1, 1)
+            end
+        end
+        notify("🌈 Colores del personaje cambiados")
+    end
+end)
+
+-- ========== TAB 5: CARPETAS (FOLDERS) ==========
+local FoldersTab = Window:AddTab("📁 Carpetas")
+
+FoldersTab:AddLabel("📂 EJEMPLO DE CARPETAS")
+
+-- Crear una carpeta dentro de la pestaña
+local myFolder = FoldersTab:AddFolder("🎮 Configuración de Juego")
+
+-- Agregar elementos dentro de la carpeta
+myFolder:AddButton("⚡ Activar modo rápido", function()
+    notify("Modo rápido activado")
+end)
+
+local folderSwitch = myFolder:AddSwitch("🔇 Modo silencioso", function(state)
+    notify("Modo silencioso: " .. (state and "ON" or "OFF"))
+end)
+
+myFolder:AddLabel("📌 Ajustes adicionales")
+
+-- Segunda carpeta
+local secondFolder = FoldersTab:AddFolder("🎨 Apariencia")
+
+secondFolder:AddButton("🎨 Tema oscuro", function()
+    notify("Tema oscuro aplicado")
+end)
+
+secondFolder:AddButton("☀️ Tema claro", function()
+    notify("Tema claro aplicado")
+end)
+
+-- ========== TAB 6: HORIZONTAL ALIGNMENT ==========
+local HorizontalTab = Window:AddTab("↔️ Horizontal")
+
+HorizontalTab:AddLabel("📌 BOTONES HORIZONTALES")
+
+-- Alineación horizontal
+local horizontalGroup = HorizontalTab:AddHorizontalAlignment()
+
+horizontalGroup:AddButton("✅ Sí", function()
+    notify("Respuesta: Sí")
+end)
+
+horizontalGroup:AddButton("❌ No", function()
+    notify("Respuesta: No")
+end)
+
+horizontalGroup:AddButton("❓ Quizás", function()
+    notify("Respuesta: Quizás")
+end)
+
+HorizontalTab:AddLabel("📌 MÁS COMPONENTES")
+
+-- Slider adicional
+local secondSlider = HorizontalTab:AddSlider("🎚️ Brillo", function(value)
+    print("[BRIGHTNESS] " .. value .. "%")
+end, {min = 0, max = 100})
+secondSlider:Set(75)
+
+-- Keybind adicional
+local secondKeybind = HorizontalTab:AddKeybind("🔑 Tecla secundaria", function(key)
+    notify("Tecla secundaria: " .. tostring(key))
+end, {standard = Enum.KeyCode.T})
+
+print("✅ KING LIBRARY UI - Script de prueba cargado correctamente")
+print("🔑 Presiona Right Shift para abrir/cerrar la interfaz")
+print("🎨 La librería usa los nuevos assets actualizados")        AnimationsActive = true
     }
 }
 
