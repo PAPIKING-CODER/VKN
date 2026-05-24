@@ -1,69 +1,13 @@
--- ==========================================================
--- DARK UI v3.0 - CLON EXACTO DE LA IMAGEN
--- ==========================================================
-local DarkUI = {}
+-- Cargar la librería
+local DarkUI = loadstring(game:HttpGet("https://pastebin.com/raw/YOUR_PASTEBIN_LINK"))() -- O require si es un ModuleScript
 
--- CONFIGURACIÓN DE COLORES (Basada en la imagen)
-local COLORS = {
-    MainBg = Color3.fromRGB(20, 20, 20),        -- Fondo ventana
-    SidebarBg = Color3.fromRGB(15, 15, 15),     -- Sidebar más oscuro
-    PanelBg = Color3.fromRGB(26, 26, 26),       -- Panel principal
-    ToggleOn = Color3.fromRGB(46, 204, 113),    -- Verde exacto
-    ToggleOff = Color3.fromRGB(60, 60, 60),     -- Gris oscuro
-    ToggleKnob = Color3.fromRGB(255, 255, 255), -- Blanco
-    SliderTrack = Color3.fromRGB(40, 40, 40),   -- Gris suave
-    SliderFill = Color3.fromRGB(52, 152, 219),  -- Azul exacto
-    SliderKnob = Color3.fromRGB(255, 255, 255), -- Blanco
-    TextMain = Color3.fromRGB(220, 220, 220),   -- Texto claro
-    TextMuted = Color3.fromRGB(120, 120, 120),  -- Texto secundario
-    Highlight = Color3.fromRGB(40, 40, 40),     -- Selección sidebar
-    ButtonBg = Color3.fromRGB(35, 35, 35),      -- Botones
-}
+-- Crear la ventana (Diseño exacto de la imagen)
+local Window = DarkUI:CreateWindow()
 
--- SISTEMA DE IDIOMAS
-local LANG = "es"
-local TRANSLATIONS = {
-    es = {
-        theme = "Theme 'Dark'",
-        author = "by /tgs",
-        main = "Main",
-        settings = "Settings",
-        title = "Interactive Elements",
-        subtitle = "Demonstration of new UI components",
-        autism = "Autism",
-        unload = "Unload",
-        brightness = "Brightness Control",
-        volume = "Volume Settings",
-        save = "Save",
-        reset = "Reset"
-    },
-    en = {
-        theme = "Theme 'Dark'",
-        author = "by /tgs",
-        main = "Main",
-        settings = "Settings",
-        title = "Interactive Elements",
-        subtitle = "Demonstration of new UI components",
-        autism = "Autism",
-        unload = "Unload",
-        brightness = "Brightness Control",
-        volume = "Volume Settings",
-        save = "Save",
-        reset = "Reset"
-    }
-}
-
--- FUNCIONES AUXILIARES
-local function Create(class, props)
-    local obj = Instance.new(class)
-    for k, v in pairs(props) do
-        if k == "Parent" then obj.Parent = v else obj[k] = v end
-    end
-    return obj
-end
-
-local function Round(frame, radius)
-    local corner = Instance.new("UICorner")
+-- Si quieres cambiar el idioma desde el script:
+-- DarkUI:SetLanguage("es")  -- Español
+-- DarkUI:SetLanguage("en")  -- Inglés
+-- (Nota: Esto requeriría modificar la librería para exponer SetLanguage)    local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius)
     corner.Parent = frame
 end
