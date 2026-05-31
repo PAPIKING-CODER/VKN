@@ -1,22 +1,7 @@
-[
-  "KING999_995",
-  "KING999_96",
-  "Usuario3",
-  "Usuario4",
-  "Usuario5",
-  "Usuario6",
-  "Usuario7",
-  "Usuario8",
-  "Usuario9",
-  "Usuario10",
-  "Usuario11",
-  "Usuario12",
-  "Usuario13",
-  "Usuario14",
-  "Usuario15",
-  "Usuario16",
-  "Usuario17",
-  "Usuario18",
-  "Usuario19",
-  "Usuario20"
-]
+{
+  "whitelist": [
+    "KING999_995",
+    "user2",
+    "KING999_995"
+  ]
+}
